@@ -2,6 +2,7 @@ package handler
 
 import (
 	"banking-api/internal/model"
+	"banking-api/internal/service"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -30,6 +31,8 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 
 	json.NewDecoder(r.Body).Decode(&user)
+
+	user = service.CreateUser(user)
 
 	fmt.Fprintln(w, "Masukkan nama", user.Name)
 	fmt.Fprintln(w, "Masukkan email", user.Email)

@@ -1,18 +1,28 @@
 package main
 
 import (
-	"banking-api/internal/handler"
+	"banking-api/internal/database"
+	"banking-api/routes"
 	"fmt"
 	"net/http"
 )
 
 func main() {
 
-	http.HandleFunc("/hello", handler.HelloHandler)
-	http.HandleFunc("/health", handler.HealthHandler)
-	http.HandleFunc("/users", handler.CreateUserHandler)
+	db, err := database.ConnectDB()
 
-	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		fmt.Println("Gagal konek ke database : ", err)
+		return
+	}
+
+	fmt.Println("Database berhasil terhubung")
+
+	_ = db
+
+	router := routes.SetupRoutes()
+
+	err = http.ListenAndServe(":8000", router)
 
 	if err != nil {
 		fmt.Println(err)
